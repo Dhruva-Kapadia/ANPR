@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import os
+import csv
 
 import DetectChars
 import DetectPlates
@@ -18,11 +19,13 @@ def main():
 
     blnKNNTrainingSuccessful = DetectChars.loadKNNDataAndTrainKNN()
 
+    filename = "Number_Plates_records.csv"
+
     if blnKNNTrainingSuccessful == False:
         print("\nerror: KNN training was not successful\n")
         return
 
-    imgOriginalScene= cv2.imread("32.jpg")
+    imgOriginalScene = cv2.imread("source.jpg")
 
     if imgOriginalScene is None:
         print("\nerror: image not read from file \n\n")
@@ -58,6 +61,15 @@ def main():
 
         print("\nlicense plate read from image = " + licPlate.strChars + "\n")
         print("----------------------------------------")
+        
+        record_date = os.path.getctime("source.jpg")
+
+        row = [licPlate.strChars, record_date]
+
+        with open(filename, 'w') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(row)
+
 
         writeLicensePlateCharsOnImage(imgOriginalScene, licPlate)
 
@@ -77,12 +89,16 @@ def drawRedRectangleAroundPlate(imgOriginalScene, licPlate):
 
     p2fRectPoints = cv2.boxPoints(licPlate.rrLocationOfPlateInScene)
 
-    cv2.line(imgOriginalScene, tuple(p2fRectPoints[0]), tuple(p2fRectPoints[1]), SCALAR_RED, 2)
-    cv2.line(imgOriginalScene, tuple(p2fRectPoints[1]), tuple(p2fRectPoints[2]), SCALAR_RED, 2)
-    cv2.line(imgOriginalScene, tuple(p2fRectPoints[2]), tuple(p2fRectPoints[3]), SCALAR_RED, 2)
-    cv2.line(imgOriginalScene, tuple(p2fRectPoints[3]), tuple(p2fRectPoints[0]), SCALAR_RED, 2)
+    p0 = (int(p2fRectPoints[0][0]),int(p2fRectPoints[0][1]))
+    p1 = (int(p2fRectPoints[1][0]),int(p2fRectPoints[1][1]))
+    p2 = (int(p2fRectPoints[2][0]),int(p2fRectPoints[2][1]))
+    p3 = (int(p2fRectPoints[3][0]),int(p2fRectPoints[3][1]))
 
-
+    cv2.line(imgOriginalScene,p0,p1,SCALAR_RED,2)
+    cv2.line(imgOriginalScene,p1,p2,SCALAR_RED,2)
+    cv2.line(imgOriginalScene,p2,p3,SCALAR_RED,2)
+    cv2.line(imgOriginalScene,p3,p0,SCALAR_RED,2)
+    
 
 def writeLicensePlateCharsOnImage(imgOriginalScene, licPlate):
     ptCenterOfTextAreaX = 0
@@ -126,21 +142,3 @@ def writeLicensePlateCharsOnImage(imgOriginalScene, licPlate):
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
