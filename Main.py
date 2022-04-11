@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import os
 import csv
+import sys
 
 import DetectChars
 import DetectPlates
@@ -25,7 +26,7 @@ def main():
         print("\nerror: KNN training was not successful\n")
         return
 
-    imgOriginalScene = cv2.imread("source.jpg")
+    imgOriginalScene = cv2.imread(sys.argv[1])
 
     if imgOriginalScene is None:
         print("\nerror: image not read from file \n\n")
