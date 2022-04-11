@@ -25,8 +25,11 @@ def main():
     if blnKNNTrainingSuccessful == False:
         print("\nerror: KNN training was not successful\n")
         return
-
-    imgOriginalScene = cv2.imread(sys.argv[1])
+    
+    if(len(sys.argv) == 0):
+        imgOriginalScene = cv2.imread("source.jpg")    
+    else:
+        imgOriginalScene = cv2.imread(sys.argv[1])
 
     if imgOriginalScene is None:
         print("\nerror: image not read from file \n\n")
