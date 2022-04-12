@@ -3,6 +3,7 @@ import numpy as np
 import os
 import csv
 import sys
+import time
 
 import DetectChars
 import DetectPlates
@@ -66,7 +67,11 @@ def main():
         print("\nlicense plate read from image = " + licPlate.strChars + "\n")
         print("----------------------------------------")
         
-        record_date = os.path.getctime("source.jpg")
+        if(len(sys.argv) == 0):
+            record_date = time.ctime(os.path.getctime("source.jpg"))   
+        else:
+            record_date = time.ctime(os.path.getctime(sys.argv[1]))
+            
 
         row = [licPlate.strChars, record_date]
 
